@@ -6,9 +6,8 @@ URLS
   http://www.rtl-sdr.com/
 
 SDR Software:
-
   gqrx
-  sdr-j
+  sdr-j http://www.sdr-j.tk/index.html
   pothos
   gnuradio ## If no system packages, install via pybombs
   cubicsdr
