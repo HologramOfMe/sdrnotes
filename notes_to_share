@@ -1,0 +1,86 @@
+URLS
+  http://greatscottgadgets.com/sdr/
+  https://www.youtube.com/results?search_query=cyberspectrum
+  http://websdr.org  ## You don't even need a dongle for this
+  http://whiteboard.ping.se/SDR/IQ  ## Great explanation of I and Q data
+  http://www.rtl-sdr.com/
+
+SDR Software:
+
+  gqrx
+  sdr-j
+  pothos
+  gnuradio ## If no system packages, install via pybombs
+  cubicsdr
+  librtl inc all the rtl_xxx tools
+  dump1090 https://github.com/antirez/dump1090
+  shinysdr https://github.com/kpreid/shinysdr.git
+  rtl_fm_gui https://github.com/halmartin/rtl_fm_gtk.git ## fix the aplay line to set 16000 instead of 16k
+  rtl_fm_python https://github.com/th0ma5w/rtl_fm_python ## I haven't tried this one
+
+
+Prevent anything else grabbing the dongle, as root:
+
+cat << EOF > /etc/modprobe.d/no-rtl.conf
+blacklist dvb_usb_rtl28xxu
+blacklist rtl2832
+blacklist dvb_usb
+blacklist dvb_usb_v2
+blacklist dvb_core
+blacklist r820t
+EOF
+
+The Hello World of SDR dongles:
+
+First install the rtlsdr (or rtl-sdr) packages for your distro. Then make sure your dongle is ready:
+
+rtl_test
+
+If that works, then:
+
+rtl_fm -M wbfm -f 101.5M | play -r 32k -t raw -e s -b 16 -c 1 -V1 -
+
+
+
+Fedora deps for sdr-j. Save this in a file, chmod a+x then run it:
+
+#!/bin/bash
+#
+echo "Preparing the environment for Fedora"
+echo " "
+echo "install packages"
+sudo dnf install gcc gcc-c++ \
+qt qt-devel qwt qwt-devel \
+fftw fftw-devel \
+alsa-lib alsa-lib-devel alsa-tools portaudio portaudio-devel \
+libsndfile libsndfile-devel libsamplerate libsamplerate-devel alsa-plugins-samplerate \
+libusb1 libusb1-devel \
+rtl-sdr rtl-sdr-devel \
+faad2-devel \
+qwt-qt5-devel qwt-qt5
+
+
+Debian / Ubuntu deps for sdr-j on the Raspberry Pi running Raspbian:
+
+apt-get install -y vim qt5-default qt5-qmake libusb-1.0-0 libusb-1.0-0-dev \
+portaudio19-dev faad libfaad-dev libsndfile1-dev \
+sndfile-tools librtlsdr0 librtlsdr-dev libfftw3-3 libfftw3-dev
+
+
+Debian / Ubuntu deps from the sdr-j manual (not tested by me):
+
+#!/bin/bash
+#
+echo "Preparing the environment for Ubuntu"
+echo "ensure that the udev rules are adapted for the usb devices"
+echo " "
+echo "install packages"
+sudo apt-get install gcc g++ \
+qt5-default libqwt-qt5-dev \
+libfftw3-3 libfftw3-dev \
+alsa-base libasound2 libasound2-dev alsa-utils libasound2-plugins \
+libportaudio2 portaudio19-dev \
+libsndfile1 libsndfile1-dev \
+libusb-1.0-0 libusb-1.0-0-dev \
+librtlsdr0 librtlsdr-dev \
+libfaad2 libfaad-dev
